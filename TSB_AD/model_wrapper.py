@@ -5,7 +5,7 @@ from .utils.slidingWindows import find_length_rank
 Unsupervise_AD_Pool = ['FFT', 'SR', 'NORMA', 'Series2Graph', 'Sub_IForest', 'IForest', 'LOF', 'Sub_LOF', 'POLY', 'MatrixProfile', 'Sub_PCA', 'PCA', 'HBOS', 
                         'Sub_HBOS', 'KNN', 'Sub_KNN','KMeansAD', 'KMeansAD_U', 'KShapeAD', 'COPOD', 'CBLOF', 'COF', 'EIF', 'RobustPCA', 'Lag_Llama', 'TimesFM', 'Chronos', 'ChronosBolt', 'MOMENT_ZS']
 Semisupervise_AD_Pool = ['Left_STAMPi', 'SAND', 'MCD', 'Sub_MCD', 'OCSVM', 'Sub_OCSVM', 'AutoEncoder', 'CNN', 'LSTMAD', 'TranAD', 'USAD', 'OmniAnomaly', 
-                        'AnomalyTransformer', 'TimesNet', 'FITS', 'Donut', 'OFA', 'MOMENT_FT']
+                        'AnomalyTransformer', 'TimesNet', 'FITS', 'Donut', 'OFA', 'MOMENT_FT', 'M2N2']
 
 def run_Unsupervise_AD(model_name, data, **kwargs):
     try:
@@ -13,9 +13,12 @@ def run_Unsupervise_AD(model_name, data, **kwargs):
         function_to_call = globals()[function_name]
         results = function_to_call(data, **kwargs)
         return results
+    except KeyError:
+        error_message = f"Model function '{function_name}' is not defined."
+        print(error_message)
+        return error_message
     except Exception as e:
-        error_message = (f"{str(e)}. It could also be the case that the model"
-            + f" function '{function_name}' is not defined.")
+        error_message = f"An error occurred while running the model '{function_name}': {str(e)}"
         print(error_message)
         return error_message
 
@@ -26,9 +29,12 @@ def run_Semisupervise_AD(model_name, data_train, data_test, **kwargs):
         function_to_call = globals()[function_name]
         results = function_to_call(data_train, data_test, **kwargs)
         return results
+    except KeyError:
+        error_message = f"Model function '{function_name}' is not defined."
+        print(error_message)
+        return error_message
     except Exception as e:
-        error_message = (f"{str(e)}. It could also be the case that the model"
-            + f" function '{function_name}' is not defined.")
+        error_message = f"An error occurred while running the model '{function_name}': {str(e)}"
         print(error_message)
         return error_message
 
@@ -381,6 +387,13 @@ def run_MOMENT_FT(data_train, data_test, win_size=256):
     clf = MOMENT(win_size=win_size, input_c=data_test.shape[1])
 
     # Finetune
+    clf.fit(data_train)
+    score = clf.decision_function(data_test)
+    return score.ravel()
+
+def run_M2N2(data_train, data_test, epochs=10, win_size=12, lr=1e-3, batch_size=128):
+    from .models.M2N2 import M2N2
+    clf = M2N2(win_size=win_size, num_channels=data_test.shape[1], lr=lr, batch_size=batch_size, epochs=epochs)
     clf.fit(data_train)
     score = clf.decision_function(data_test)
     return score.ravel()
