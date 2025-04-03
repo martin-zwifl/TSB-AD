@@ -1,0 +1,12 @@
+FROM mcr.microsoft.com/devcontainers/python:3.11 AS base
+
+COPY requirements.txt /requirements.txt
+RUN pip install -r /requirements.txt
+RUN pip install statsmodels 
+RUN pip install autogluon --extra-index-url https://download.pytorch.org/whl/cpu
+RUN pip install chronos-forecasting
+# RUN pip install -e .
+
+FROM base as final
+
+ENV PYTHONPATH="${PYTHONPATH}:/workspaces/TSB-AD/TSB_AD"

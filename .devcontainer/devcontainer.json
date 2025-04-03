@@ -1,0 +1,33 @@
+{
+    "name": "Python 3.11",
+    // "image": "mcr.microsoft.com/devcontainers/python:3.11",
+    "build": { 
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "runArgs": ["--oom-kill-disable"],
+    "workspaceFolder": "/workspaces/TSB-AD",
+    // Configure tool-specific properties.
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": { 
+				"python.defaultInterpreterPath": "/usr/local/bin/python",
+                "editor.rulers": [79]
+			},
+			
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"ms-python.python",
+                "ms-python.debugpy",
+				"ms-python.vscode-pylance",
+                "mechatroner.rainbow-csv"
+			]
+		}
+	},
+    "postCreateCommand": "bash -i -c 'pip install -e ../.'",
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/workspaces,type=bind"
+    ]
+}
