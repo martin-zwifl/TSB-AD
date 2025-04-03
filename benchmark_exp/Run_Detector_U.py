@@ -34,7 +34,7 @@ if __name__ == '__main__':
     parser.add_argument('--score_dir', type=str, default='eval/score/uni/')
     parser.add_argument('--save_dir', type=str, default='eval/metrics/uni/')
     parser.add_argument('--save', type=bool, default=False)
-    parser.add_argument('--AD_Name', type=str, default='IForest')
+    parser.add_argument('--AD_Name', type=str, default='ChronosBolt')
     args = parser.parse_args()
 
 

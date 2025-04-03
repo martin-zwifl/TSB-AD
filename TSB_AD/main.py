@@ -32,7 +32,7 @@ if __name__ == '__main__':
     parser.add_argument('--filename', type=str, default='001_NAB_id_1_Facility_tr_1007_1st_2014.csv')
     parser.add_argument('--data_direc', type=str, default='Datasets/TSB-AD-U/')
     parser.add_argument('--save', type=bool, default=False)
-    parser.add_argument('--AD_Name', type=str, default='IForest')
+    parser.add_argument('--AD_Name', type=str, default='Chronos')
     args = parser.parse_args()
 
     df = pd.read_csv(args.data_direc + args.filename).dropna()

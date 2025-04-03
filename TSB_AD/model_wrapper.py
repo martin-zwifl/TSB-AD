@@ -3,7 +3,7 @@ import math
 from .utils.slidingWindows import find_length_rank
 
 Unsupervise_AD_Pool = ['FFT', 'SR', 'NORMA', 'Series2Graph', 'Sub_IForest', 'IForest', 'LOF', 'Sub_LOF', 'POLY', 'MatrixProfile', 'Sub_PCA', 'PCA', 'HBOS', 
-                        'Sub_HBOS', 'KNN', 'Sub_KNN','KMeansAD', 'KMeansAD_U', 'KShapeAD', 'COPOD', 'CBLOF', 'COF', 'EIF', 'RobustPCA', 'Lag_Llama', 'TimesFM', 'Chronos', 'MOMENT_ZS']
+                        'Sub_HBOS', 'KNN', 'Sub_KNN','KMeansAD', 'KMeansAD_U', 'KShapeAD', 'COPOD', 'CBLOF', 'COF', 'EIF', 'RobustPCA', 'Lag_Llama', 'TimesFM', 'Chronos', 'ChronosBolt', 'MOMENT_ZS']
 Semisupervise_AD_Pool = ['Left_STAMPi', 'SAND', 'MCD', 'Sub_MCD', 'OCSVM', 'Sub_OCSVM', 'AutoEncoder', 'CNN', 'LSTMAD', 'TranAD', 'USAD', 'OmniAnomaly', 
                         'AnomalyTransformer', 'TimesNet', 'FITS', 'Donut', 'OFA', 'MOMENT_FT']
 
@@ -13,8 +13,9 @@ def run_Unsupervise_AD(model_name, data, **kwargs):
         function_to_call = globals()[function_name]
         results = function_to_call(data, **kwargs)
         return results
-    except:
-        error_message = f"Model function '{function_name}' is not defined."
+    except Exception as e:
+        error_message = (f"{str(e)}. It could also be the case that the model"
+            + f" function '{function_name}' is not defined.")
         print(error_message)
         return error_message
 
@@ -25,8 +26,9 @@ def run_Semisupervise_AD(model_name, data_train, data_test, **kwargs):
         function_to_call = globals()[function_name]
         results = function_to_call(data_train, data_test, **kwargs)
         return results
-    except:
-        error_message = f"Model function '{function_name}' is not defined."
+    except Exception as e:
+        error_message = (f"{str(e)}. It could also be the case that the model"
+            + f" function '{function_name}' is not defined.")
         print(error_message)
         return error_message
 
@@ -347,6 +349,13 @@ def run_Lag_Llama(data, win_size=96, batch_size=64):
 def run_Chronos(data, win_size=50, batch_size=64):
     from .models.Chronos import Chronos
     clf = Chronos(win_size=win_size, prediction_length=1, input_c=data.shape[1], model_size='base', batch_size=batch_size)
+    clf.fit(data)
+    score = clf.decision_scores_
+    return score.ravel()
+
+def run_ChronosBolt(data, win_size=50, batch_size=64):
+    from .models.ChronosBolt import ChronosBolt
+    clf = ChronosBolt(win_size=win_size, prediction_length=1, input_c=data.shape[1], model_size='bolt_base', batch_size=batch_size)
     clf.fit(data)
     score = clf.decision_scores_
     return score.ravel()

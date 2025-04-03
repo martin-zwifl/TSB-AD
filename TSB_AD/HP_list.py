@@ -224,6 +224,9 @@ Uni_algo_HP_dict = {
     'Chronos': {
         'win_size': [50, 100, 150]
     },
+    'ChronosBolt': {
+        'win_size': [50, 100, 150]
+    },
     'TimesFM': {
         'win_size': [32, 64, 96]
     },
@@ -268,6 +271,7 @@ Optimal_Uni_algo_HP_dict = {
     'OFA': {'win_size': 50},
     'Lag_Llama': {'win_size': 96},
     'Chronos': {'win_size': 100},
+    'ChronosBolt': {'win_size': 100},
     'TimesFM': {'win_size': 96},
     'MOMENT_ZS': {'win_size': 64},
     'MOMENT_FT': {'win_size': 64}
